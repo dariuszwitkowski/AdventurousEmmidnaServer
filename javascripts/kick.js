@@ -19,7 +19,7 @@ function kickPlayera(btn) {
 function fetchData() {
     var xmlHttp = new XMLHttpRequest();
     var url = "http://127.0.0.1:8080/refresh?clientHash1="+p1+"&clientHash2="+p2;
-    xmlHttp.open( "GET", url, false );
+    xmlHttp.open( "GET", url, true );
     xmlHttp.send( null );
     if(xmlHttp.responseText == "REF")
         window.location.reload(true);
