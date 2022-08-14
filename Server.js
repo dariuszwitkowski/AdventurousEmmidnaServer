@@ -7,9 +7,9 @@ const fs = require('fs');
 const e = require('express');
 
 // action list player 1
-var messagesP1 = "";
+var messagesP1 = [];
 // action list player 1
-var messagesP2 = "";
+var messagesP2 = [];
 // client identifier player 1
 var p1 = "";
 // client identifier player 2
@@ -31,11 +31,11 @@ app.post('/', (req, res) => {
   if(JSON.stringify(req.body) == "{}") res.status(200);
   // check if player is p1 or p2. If yes: save message; If not: return 401 err
   if(req.body.clientHash == p1) {
-    messagesP1 = req.body;
+    messagesP1.push(req.body);
     res.json("OK: P1")
   }
   else if(req.body.clientHash == p2) {
-    messagesP2 = req.body;
+    messagesP2.push(req.body);
     res.json("OK: P2")
   } else {
     console.warn("Unauthorized message upload");
@@ -56,15 +56,15 @@ app.get('/', (req, res) => {
   // check if player is p1 or p2, return message
   if(p1 == p2 && p1 == req.query.clientHash) {
     var resMessages = messagesP1;
-    messagesP1 = "";
+    messagesP1 = [];
     res.json(resMessages)
   } else if(req.query.clientHash == p1) {
     var resMessages = messagesP2;
-    messagesP2 = "";
+    messagesP2 = [];
     res.json(resMessages)
   } else if(req.query.clientHash == p2) {
     var resMessages = messagesP1;
-    messagesP1 = "";
+    messagesP1 = [];
     res.json(resMessages)
   } else {
     console.warn("Unauthorized message download: "+ req.query.clientHash);
