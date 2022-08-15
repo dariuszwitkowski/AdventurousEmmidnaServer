@@ -27,7 +27,7 @@ app.set('view engine', 'pug')
   req.body -> POST data
 */
 app.post('/', (req, res) => {
-  console.log("incoming: " + JSON.stringify(req.body));
+    console.log("incoming: " + JSON.stringify(req.body));
   if(JSON.stringify(req.body) == "{}") res.status(200);
   // check if player is p1 or p2. If yes: save message; If not: return 401 err
   if(req.body.clientHash == p1) {
