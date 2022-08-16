@@ -54,16 +54,13 @@ app.get('/', (req, res) => {
   // TODO delete before release
   // first if for testing purpose only
   // check if player is p1 or p2, return message
-  if(p1 == p2 && p1 == req.query.clientHash) {
-    var resMessages = messagesP1;
-    messagesP1 = [];
-    res.json(resMessages)
-  } else if(req.query.clientHash == p1) {
+  if(req.query.clientHash == p1) {
     var resMessages = messagesP2;
     messagesP2 = [];
     res.json(resMessages)
   } else if(req.query.clientHash == p2) {
     var resMessages = messagesP1;
+    
     messagesP1 = [];
     res.json(resMessages)
   } else {
@@ -77,11 +74,15 @@ app.post('/login', (req,res) => {
   if(p1 == "") {
     p1 = req.body.clientHash;
     console.log("P1 connected: "+ req.body.clientHash)
-    res.json("connected as p1")
+    messagesP1.push(req.body)
+    messagesP2 = [];
+    res.json("connected as Player 1")
   } else if(p2 == "") {
     p2 = req.body.clientHash;
     console.log("P2 connected: "+ req.body.clientHash)
-    res.json("connected as p2")
+    messagesP2.push(req.body)
+    messagesP1 = [];
+    res.json("connected as Player 2")
   } else {
     res.status(401).json("Not connected - too many players")
   }
@@ -93,6 +94,7 @@ app.get('/admin', function(req, res) {
 });
 // endpoint to kick player
 app.get('/kick', function(req, res) {
+  console.log("Kick!!!");
   if(kickPlayer(req.query.clientHash)) {
     res.status(200).json("Player: "+req.query.clientHash+" kicked")
   } else {
@@ -128,10 +130,14 @@ app.listen(8080, () => {
 //kick player helper
 function kickPlayer(clientHash) {
   if(p1 == clientHash) {
+    messagesP2 = [];
+    messagesP2.push({"type": "kick", "name": p1})
     p1 = "";
     return true;
   }
   if(p2 == clientHash) {
+    messagesP1 = [];
+    messagesP1.push({"type": "kick", "name": p2})
     p2 = "";
     return true;
   }
